@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         //ImageView IW = MakeImage(int imageviewID, int imageID);
-
         //tests for addin image:
         //ImageView _imgElf = (ImageView) findViewById(R.id._img2);
         //_imgElf.setImageResource(R.drawable.elf_w_orig);
@@ -133,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //get all images (views) from root layout and put needed attributes () to array
-        //ps. java's array's size have to be declared before insertion
+        //ps. java's array's size have to be declared before insertion -> maybe use arraylist instead
         int childCount = _rootLayout.getChildCount();
         ImagesWithZ = new ImageZ[childCount];
 
