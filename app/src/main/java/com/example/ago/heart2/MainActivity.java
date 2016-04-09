@@ -39,6 +39,8 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TESTI 123
+
     //testikommentti
 
     //movable image itself and it's animationdrawable to contain image's animations
