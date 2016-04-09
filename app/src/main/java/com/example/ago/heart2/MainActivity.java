@@ -39,7 +39,7 @@ import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    //testikommentti
 
     //movable image itself and it's animationdrawable to contain image's animations
     public ImageView _img;
