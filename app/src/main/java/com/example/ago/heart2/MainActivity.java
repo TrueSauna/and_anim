@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     5. add LayoutParameters to image
     6. add image to layout
     ps. not needed to attach layout to parent, because it already exists in content_main.xml
-
+asd
     */
 
 
