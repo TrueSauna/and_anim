@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     //testikommentti
 
+    //testikeisari
+
     //movable image itself and it's animationdrawable to contain image's animations
     public ImageView _img;
     public AnimationDrawable _adimgDwarf;
@@ -63,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     5. add LayoutParameters to image
     6. add image to layout
     ps. not needed to attach layout to parent, because it already exists in content_main.xml
-asd<
     */
 
 
