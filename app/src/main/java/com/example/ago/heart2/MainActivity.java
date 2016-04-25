@@ -169,8 +169,6 @@ public class MainActivity extends AppCompatActivity {
 
         //_img.setTranslationZ(1.1f);
 
-
-
         _grid.setRotationX(10.0f);
 
 

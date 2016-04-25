@@ -18,6 +18,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:id="@+id/_imgDwarf" android:background="@drawable/alist_dwarf" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:id="@+id/_imgGrid"/>
+
 
 
 
