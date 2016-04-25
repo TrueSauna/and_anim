@@ -98,38 +98,77 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public ArrayList<LineInfo> CreateGrid(int height, int width, int size)
+    public class Coordinate {
+        int X;
+        int Y;
+
+        public Coordinate(int x, int y) {
+            X = x;
+            Y = y;
+        }
+    }
+
+    public class Grid
+    {
+        ArrayList<LineInfo> gridLines;
+        ArrayList<Coordinate> midPoints;
+
+        public Grid() {
+        }
+
+        public Grid(ArrayList<LineInfo> gridLines, ArrayList<Coordinate> midPoints) {
+            this.gridLines = gridLines;
+            this.midPoints = midPoints;
+        }
+    }
+
+    public Grid CreateGrid(int startx, int starty, int height, int width, int size)
     {
         ArrayList<LineInfo> alLineInfo = new ArrayList<LineInfo>();
+        ArrayList<Coordinate> midPoints = new ArrayList<Coordinate>();
 
-        int h = 0;
+        int h = startx;
         //int v = height;
-        int v = height/size * size;
+        int verticalLineLength = height/size * size + starty;
 
-        int a = width/size;
+        int numberOfVerticalLines = width/size;
 
         //int a = Math.round((double)height/(float)size);
 
 
-        for (int i = 0; i < a+1; i++)
+        for (int i = 0; i < numberOfVerticalLines+1; i++)
         {
-            alLineInfo.add(new LineInfo(h,0,h,v));
+            alLineInfo.add(new LineInfo(h,starty,h,verticalLineLength));
             h += size;
         }
 
-        h = width/size * size;
-        v = 0;
+        int horizontalLineLength = width/size * size + startx;
+        int v = starty;
 
-        a = height/size;
+        int numberOfHorizontalLines = height/size;
 
-        for (int i = 0; i < a+1; i++)
+        for (int i = 0; i < numberOfHorizontalLines+1; i++)
         {
-            alLineInfo.add(new LineInfo(0,v,h,v));
+            alLineInfo.add(new LineInfo(startx,v, horizontalLineLength,v));
             v += size;
         }
 
 
-        return alLineInfo;
+        int half = size/2;
+
+        for (int i = 1; i < numberOfVerticalLines * 2; i += 2)
+        {
+            for (int j = 1; j < numberOfHorizontalLines * 2; j += 2)
+            {
+                int a = startx + half * i;
+                int b = starty + half * j;
+
+                midPoints.add(new Coordinate(a, b));
+            }
+        }
+
+
+        return new Grid(alLineInfo, midPoints);
     }
 
     @Override
@@ -150,26 +189,36 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Draw grid
-
         _grid = (ImageView) this.findViewById(R.id._imgGrid);
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         _grid.setImageBitmap(bitmap);
 
-        // Line
         Paint paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setStrokeWidth(10);
 
-        ArrayList<LineInfo> alLineInfo = CreateGrid(height, width, 150);
+        //Create grid
+        Grid grid = CreateGrid(100, 200, 1500, 900, 150);
 
-        for(LineInfo li: alLineInfo) {
+
+        //Paint grid lines
+        for(LineInfo li: grid.gridLines) {
             canvas.drawLine(li.startx, li.starty, li.endx, li.endy, paint);
         }
 
+        paint.setColor(Color.RED);
+        paint.setStrokeWidth(10);
+
+        //Paint grid midpoints
+        for(Coordinate co: grid.midPoints) {
+            canvas.drawPoint(co.X, co.Y, paint);
+        }
+
+
         //_img.setTranslationZ(1.1f);
 
-        _grid.setRotationX(10.0f);
+
 
 
         //STARTS HERE:---------------------
@@ -185,6 +234,11 @@ public class MainActivity extends AppCompatActivity {
         //z-priority (order of image if moved on top of each other, lower -> higher):
         _img.setTranslationZ(1.1f);
         _grid.setTranslationZ(0.0f);
+
+
+
+        //_grid.setRotationX(10.0f);
+        //_img.setRotationX(10.0f);
 
         ImageView _iwElf = MakeImage(R.drawable.elf_w_orig, new PointF(100f,100f));
         _rootLayout.addView(_iwElf);
