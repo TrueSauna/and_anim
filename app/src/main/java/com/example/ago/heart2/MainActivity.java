@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
+        _grid.setRotationX(10.0f);
 
 
         //STARTS HERE:---------------------
