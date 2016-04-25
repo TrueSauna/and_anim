@@ -35,6 +35,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     //movable image itself and it's animationdrawable to contain image's animations
     public ImageView _img;
+    public ImageView _grid;
     public AnimationDrawable _adimgDwarf;
     public ImageZ[] ImagesWithZ;
 
@@ -80,6 +82,56 @@ public class MainActivity extends AppCompatActivity {
 
     public PointF[] pointArray = {_pointA, _pointB};
 
+
+    public class LineInfo
+    {
+        int startx;
+        int starty;
+        int endx;
+        int endy;
+
+        public LineInfo (int sx, int sy ,int ex, int ey){
+            startx = sx;
+            starty = sy;
+            endx = ex;
+            endy = ey;
+        }
+    }
+
+    public ArrayList<LineInfo> CreateGrid(int height, int width, int size)
+    {
+        ArrayList<LineInfo> alLineInfo = new ArrayList<LineInfo>();
+
+        int h = 0;
+        //int v = height;
+        int v = height/size * size;
+
+        int a = width/size;
+
+        //int a = Math.round((double)height/(float)size);
+
+
+        for (int i = 0; i < a+1; i++)
+        {
+            alLineInfo.add(new LineInfo(h,0,h,v));
+            h += size;
+        }
+
+        h = width/size * size;
+        v = 0;
+
+        a = height/size;
+
+        for (int i = 0; i < a+1; i++)
+        {
+            alLineInfo.add(new LineInfo(0,v,h,v));
+            v += size;
+        }
+
+
+        return alLineInfo;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +149,29 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        //Draw grid
+
+        _grid = (ImageView) this.findViewById(R.id._imgGrid);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        _grid.setImageBitmap(bitmap);
+
+        // Line
+        Paint paint = new Paint();
+        paint.setColor(Color.GREEN);
+        paint.setStrokeWidth(10);
+
+        ArrayList<LineInfo> alLineInfo = CreateGrid(height, width, 150);
+
+        for(LineInfo li: alLineInfo) {
+            canvas.drawLine(li.startx, li.starty, li.endx, li.endy, paint);
+        }
+
+        //_img.setTranslationZ(1.1f);
+
+
+
+
 
 
         //STARTS HERE:---------------------
@@ -111,6 +186,7 @@ public class MainActivity extends AppCompatActivity {
         //however this might be more elegant solution overall
         //z-priority (order of image if moved on top of each other, lower -> higher):
         _img.setTranslationZ(1.1f);
+        _grid.setTranslationZ(0.0f);
 
         ImageView _iwElf = MakeImage(R.drawable.elf_w_orig, new PointF(100f,100f));
         _rootLayout.addView(_iwElf);
@@ -123,7 +199,8 @@ public class MainActivity extends AppCompatActivity {
         ImageView _iwMonk = MakeImage(R.drawable.head, new PointF(300f,400f));
         _rootLayout.addView(_iwMonk);
 
-
+        ImageView _iwMonk2 = MakeImage(R.drawable.head2, new PointF(300f,400f));
+        _rootLayout.addView(_iwMonk2);
 
 
         //ImageView IW = MakeImage(int imageviewID, int imageID);
@@ -154,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
         _iwElf.setOnTouchListener(new MyTouchListener());
         _iwWarr.setOnTouchListener(new MyTouchListener());
         _iwMonk.setOnTouchListener(new MyTouchListener());
-
+        _iwMonk2.setOnTouchListener(new MyTouchListener());
 
         //still-animation for dwarf-image:
 
