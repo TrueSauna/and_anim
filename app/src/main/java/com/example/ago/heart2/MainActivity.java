@@ -460,22 +460,50 @@ public class MainActivity extends AppCompatActivity {
             //ImageZ[] oldImageZArray = new ImageZ[0];
 
 
+
+
+            float x = motionEvent.getX();
+            float y = motionEvent.getY();
+
+            int tempResId = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
+            ImageView tempView = new ImageView(getApplicationContext());
+            tempView.setImageResource(tempResId);
+
+
+
+            BitmapDrawable drawable = (BitmapDrawable)tempView.getDrawable();
+
+
+//                    tempView.setDrawingCacheEnabled(true);
+//                    Drawable drawable = ((ImageView)view).getDrawable();
+
+
+            Bitmap bitmap = drawable.getBitmap();
+
+//                    BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+//                    Bitmap bitmap = drawable.getBitmap();
+
+            //Bitmap tempBitmap = ((BitmapDrawable)tempView.getBackground()).getBitmap();
+            int transparency = ((bitmap.getPixel((int)x, (int)y) & 0xff000000) >> 24);
+
+
+            //TODO use TODO more
+
+
             switch(motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
 
+                    if (transparency < 0)
+                    {
 
                     currentImageZ = getCurrentImageFromZ(view.getTag());
 
+//
+//                    imageView.setDrawingCacheEnabled(true);
+//                    Drawable drawable = ((ImageView)view).getDrawable();
+//                    Bitmap bitmap = imageView.getDrawingCache();
 
-                    float x = motionEvent.getX();
-                    float y = motionEvent.getY();
 
-                    int tempResId = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
-                    ImageView tempView = new ImageView(getApplicationContext());
-                    tempView.setImageResource(tempResId);
-
-                    Bitmap tempBitmap = ((BitmapDrawable)tempView.getBackground()).getBitmap();
-                    int transparency = ((tempBitmap.getPixel((int)x, (int)y) & 0xff000000) >> 24);
 
 
                     //motionEvent.
@@ -497,8 +525,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                    if (transparency > 0)
-                    {
+
 
                         cloneImageZToOld();
 
@@ -537,69 +564,70 @@ public class MainActivity extends AppCompatActivity {
 
                 case MotionEvent.ACTION_MOVE:
 
+                    if (transparency < 0) {
 
-                    //move image:
-                    PointF movement = new PointF( motionEvent.getX() - _downPT.x, motionEvent.getY() - _downPT.y);
-                    view.setX((int) (_startPT.x + movement.x));
-                    view.setY((int) (_startPT.y + movement.y));
-                    _startPT = new PointF( view.getX(), view.getY() );
+                        //move image:
+                        PointF movement = new PointF(motionEvent.getX() - _downPT.x, motionEvent.getY() - _downPT.y);
+                        view.setX((int) (_startPT.x + movement.x));
+                        view.setY((int) (_startPT.y + movement.y));
+                        _startPT = new PointF(view.getX(), view.getY());
 
 
-                    //CHANGE THE Z-INDEX OF THE IMAGES -->>
-                    //comparison from previous - current to determine changes in order
+                        //CHANGE THE Z-INDEX OF THE IMAGES -->>
+                        //comparison from previous - current to determine changes in order
 
-                    currentImageZ.setyCoord(view.getY());
-                    //saves coordinate changes to ImageZ-array:
-                    saveCurrentImageToZ(currentImageZ);
-                    //sort array by changed y to determine if order has changed:
-                    Arrays.sort(ImagesWithZ);
+                        currentImageZ.setyCoord(view.getY());
+                        //saves coordinate changes to ImageZ-array:
+                        saveCurrentImageToZ(currentImageZ);
+                        //sort array by changed y to determine if order has changed:
+                        Arrays.sort(ImagesWithZ);
 
-                    //this changes every image's z that are in layout (in same order than ordered ImagesWithZ-array) by iterated counter
-                    updateLayoutZ();
+                        //this changes every image's z that are in layout (in same order than ordered ImagesWithZ-array) by iterated counter
+                        updateLayoutZ();
 
-                    //get most close (2 points atm) point for snap-functions (shadow for snaptarget & location of snap)
-                    _currentClosestPoint = getClosestSnap(_startPT, pointArray);
+                        //get most close (2 points atm) point for snap-functions (shadow for snaptarget & location of snap)
+                        _currentClosestPoint = getClosestSnap(_startPT, pointArray);
 
-                    //check if closest point already has an image in it
-                    Boolean hasTaken = hasAlreadyTaken(_currentClosestPoint);
+                        //check if closest point already has an image in it
+                        Boolean hasTaken = hasAlreadyTaken(_currentClosestPoint);
 
-                    int resID = 0;
+                        int resID = 0;
 
-                    //Show STOP:
-                    //if target spot has already an image OR imageshadow (hasTaken = true):
-                    if(hasTaken){
-                        resID = getResources().getIdentifier("stop", "drawable", getPackageName());
-                        _imgShadow2.setTranslationZ(100f);
-                        _imgShadow2.setAlpha((float)1);
-                    }
-                    //if image is dragged exactly to the target spot:
-                    else if(_currentClosestPoint.x == view.getX() && _currentClosestPoint.y == view.getY()){
-                        resID = getResources().getIdentifier("stop", "drawable", getPackageName());
-                        _imgShadow2.setTranslationZ(100f);
-                        _imgShadow2.setAlpha((float)1);
-                    }
-                    //Show shadow:
-                    //if theres no image OR imageshadow in snapspot
-                    else{
-                        resID = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
-                        _imgShadow2.setAlpha((float) 0.2);
-                        _imgShadow2.setTranslationZ(0.01f);
-                    }
+                        //Show STOP:
+                        //if target spot has already an image OR imageshadow (hasTaken = true):
+                        if (hasTaken) {
+                            resID = getResources().getIdentifier("stop", "drawable", getPackageName());
+                            _imgShadow2.setTranslationZ(100f);
+                            _imgShadow2.setAlpha((float) 1);
+                        }
+                        //if image is dragged exactly to the target spot:
+                        else if (_currentClosestPoint.x == view.getX() && _currentClosestPoint.y == view.getY()) {
+                            resID = getResources().getIdentifier("stop", "drawable", getPackageName());
+                            _imgShadow2.setTranslationZ(100f);
+                            _imgShadow2.setAlpha((float) 1);
+                        }
+                        //Show shadow:
+                        //if theres no image OR imageshadow in snapspot
+                        else {
+                            resID = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
+                            _imgShadow2.setAlpha((float) 0.2);
+                            _imgShadow2.setTranslationZ(0.01f);
+                        }
 
-                    //make snapshadow
-                    _imgShadow2.setImageResource(resID);
-                    _imgShadow2.setLayoutParams(_imgParamsShadow2);
-                    _imgShadow2.setX(_currentClosestPoint.x);
-                    _imgShadow2.setY(_currentClosestPoint.y);
+                        //make snapshadow
+                        _imgShadow2.setImageResource(resID);
+                        _imgShadow2.setLayoutParams(_imgParamsShadow2);
+                        _imgShadow2.setX(_currentClosestPoint.x);
+                        _imgShadow2.setY(_currentClosestPoint.y);
 
-                    //add shadow to layout if it's position has changed (delete previous shadow -> only one instance of shadow up)
-                    if(_previousPoint != _currentClosestPoint){
-                        _rootLayout.removeView(_imgShadow2);
-                        _rootLayout.addView(_imgShadow2);
-                    }
+                        //add shadow to layout if it's position has changed (delete previous shadow -> only one instance of shadow up)
+                        if (_previousPoint != _currentClosestPoint) {
+                            _rootLayout.removeView(_imgShadow2);
+                            _rootLayout.addView(_imgShadow2);
+                        }
 
-                    //updating previouspoint
-                    _previousPoint = _currentClosestPoint;
+                        //updating previouspoint
+                        _previousPoint = _currentClosestPoint;
 
 
 
@@ -659,39 +687,41 @@ public class MainActivity extends AppCompatActivity {
                     _imgDwarf.setLayoutParams(layoutParams);
                     */
 
-
+                    }
 
                     break;
 
                 case MotionEvent.ACTION_UP:
 
-                    _rootLayout.removeView(_imgShadow);
-                    _rootLayout.removeView(_imgShadow2);
+                    if (transparency < 0) {
 
-                    //delete references to shadow and snap
-                    _previousPoint = null;
-                    _currentClosestPoint = null;
+                        _rootLayout.removeView(_imgShadow);
+                        _rootLayout.removeView(_imgShadow2);
 
-                    TranslateAnimation moveImage = new TranslateAnimation(
+                        //delete references to shadow and snap
+                        _previousPoint = null;
+                        _currentClosestPoint = null;
+
+                        TranslateAnimation moveImage = new TranslateAnimation(
                             /*  startx,
                             *   endx,
                             *   starty,
                                 endy
                                 ALL are calculated FROM current point of image
                             */
-                            _origStart.x - _startPT.x,
-                            0,
-                            _origStart.y - _startPT.y,
-                            0
-                    );
+                                _origStart.x - _startPT.x,
+                                0,
+                                _origStart.y - _startPT.y,
+                                0
+                        );
 
-                    //moveImage.setFillAfter(true);
+                        //moveImage.setFillAfter(true);
 
-                    moveImage.setDuration(250);
+                        moveImage.setDuration(250);
 
-                    view.startAnimation(moveImage);
+                        view.startAnimation(moveImage);
 
-
+                    }
 
                     break;
 
