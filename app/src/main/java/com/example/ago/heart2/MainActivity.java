@@ -435,6 +435,11 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
+//    public boolean isTransparent(ImageZ img, int x, int y ) {
+//        Bitmap bitmap = ((BitmapDrawable)img. .getDrawable()).getBitmap();
+//        int transparency = ((bitmap.getPixel(x,y) & 0xff000000) >> 24);
+//    }
+
     public class MyTouchListener implements View.OnTouchListener {
 
         PointF _downPT = new PointF();
@@ -458,38 +463,75 @@ public class MainActivity extends AppCompatActivity {
             switch(motionEvent.getAction()) {
                 case MotionEvent.ACTION_DOWN:
 
+
                     currentImageZ = getCurrentImageFromZ(view.getTag());
 
-                    cloneImageZToOld();
 
-                    int resId = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
+                    float x = motionEvent.getX();
+                    float y = motionEvent.getY();
 
-                    _imgShadow = new ImageView(getApplicationContext());
-                    _imgShadow.setImageResource(resId);
+                    int tempResId = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
+                    ImageView tempView = new ImageView(getApplicationContext());
+                    tempView.setImageResource(tempResId);
 
-                    //visibility:
-                    _imgShadow.setAlpha((float) 0.5);
+                    Bitmap tempBitmap = ((BitmapDrawable)tempView.getBackground()).getBitmap();
+                    int transparency = ((tempBitmap.getPixel((int)x, (int)y) & 0xff000000) >> 24);
 
-                    //attach correct parameters to image (equals parameters in xml, for example, android:layout_width="wrap_content", mandatory, null != accepted)
-                    _imgParamsShadow = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                    _imgShadow.setLayoutParams(_imgParamsShadow);
 
-                    //set starting point to movable image:
-                    _downPT.x = motionEvent.getX();
-                    _downPT.y = motionEvent.getY();
-                    _startPT = new PointF(view.getX(), view.getY() );
-                    _origStart = new PointF(view.getX(), view.getY() );
+                    //motionEvent.
 
-                    //move shadow-image to correct position (where it was when movement started)
-                    _imgShadow.setX(_startPT.x);
-                    _imgShadow.setY(_startPT.y);
-                    _imgShadow.setTranslationZ(0.01f);
 
-                    //add image to main layout
-                    _rootLayout.addView(_imgShadow);
+//                    // Create empty BufferedImage, sized to Image
+//                    BufferedImage buffImage =
+//                            new BufferedImage(
+//                                    image.getWidth(null),
+//                                    image.getHeight(null),
+//                                    BufferedImage.TYPE_INT_ARGB);
+//                    Graphics g = buffImage.createGraphics();
+//                    g.drawImage(image, 0, 0, null);
+//                    //Dispose the Graphics
+//                    g.dispose();
+//
+//
+//                    currentImageZ.
 
-                    _imgShadow2 = new ImageView(getApplicationContext());
-                    _imgParamsShadow2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+
+                    if (transparency > 0)
+                    {
+
+                        cloneImageZToOld();
+
+                        int resId = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
+
+                        _imgShadow = new ImageView(getApplicationContext());
+                        _imgShadow.setImageResource(resId);
+
+                        //visibility:
+                        _imgShadow.setAlpha((float) 0.5);
+
+                        //attach correct parameters to image (equals parameters in xml, for example, android:layout_width="wrap_content", mandatory, null != accepted)
+                        _imgParamsShadow = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                        _imgShadow.setLayoutParams(_imgParamsShadow);
+
+                        //set starting point to movable image:
+                        _downPT.x = motionEvent.getX();
+                        _downPT.y = motionEvent.getY();
+                        _startPT = new PointF(view.getX(), view.getY() );
+                        _origStart = new PointF(view.getX(), view.getY() );
+
+                        //move shadow-image to correct position (where it was when movement started)
+                        _imgShadow.setX(_startPT.x);
+                        _imgShadow.setY(_startPT.y);
+                        _imgShadow.setTranslationZ(0.01f);
+
+                        //add image to main layout
+                        _rootLayout.addView(_imgShadow);
+
+                        _imgShadow2 = new ImageView(getApplicationContext());
+                        _imgParamsShadow2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+                    }
+
 
                     break;
 
