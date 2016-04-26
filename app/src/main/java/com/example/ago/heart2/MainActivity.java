@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -461,39 +462,9 @@ public class MainActivity extends AppCompatActivity {
 
 
             try {
-                float x = motionEvent.getX();
-                float y = motionEvent.getY();
-
-                int tempResId = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
-                ImageView tempView = new ImageView(getApplicationContext());
-                tempView.setImageResource(tempResId);
 
 
-                BitmapDrawable drawable = (BitmapDrawable)tempView.getDrawable();
 
-
-//                    tempView.setDrawingCacheEnabled(true);
-//                    Drawable drawable = ((ImageView)view).getDrawable();
-
-
-                Bitmap bitmap = drawable.getBitmap();
-
-//                    BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-//                    Bitmap bitmap = drawable.getBitmap();
-
-                int transparency = -1;
-                int bitmapheight = bitmap.getHeight();
-
-                if(y < bitmapheight) {
-
-                    //Bitmap tempBitmap = ((BitmapDrawable)tempView.getBackground()).getBitmap();
-                    transparency = ((bitmap.getPixel((int) x, (int) y) & 0xff000000) >> 24);
-                }
-                else
-                {
-                    String s = "error";
-
-                }
 
                 //TODO use TODO more
 
@@ -501,10 +472,81 @@ public class MainActivity extends AppCompatActivity {
                 switch(motionEvent.getAction()) {
                     case MotionEvent.ACTION_DOWN:
 
-                        if (transparency < 0)
-                        {
+
 
                         currentImageZ = getCurrentImageFromZ(view.getTag());
+
+
+                        int[] imgCoords = new int[2];
+                        view.getLocationOnScreen(imgCoords);
+
+//                int wholeX = (int) motionEvent.getX();
+//                int wholeY = (int) motionEvent.getY();
+
+                        int x = (int) motionEvent.getX();
+                        int y = (int) motionEvent.getY();
+
+                        int rawX = (int) motionEvent.getRawX();
+                        int rawY = (int) motionEvent.getRawY();
+
+                        int test = getStatusBarHeight();
+//
+//                int xf = wholeX - imgCoords[0];
+//                int yf = wholeY - imgCoords[1] - test;
+
+                        //y = y - getStatusBarHeight();
+
+//                Matrix inverse = new Matrix();
+//                view.getMatrix().invert(inverse);
+
+//                float x = motionEvent.getRawX();
+//                float y = motionEvent.getRawX();
+//                float[] touchPoint = new float[] {motionEvent.getX(), motionEvent.getY()};
+//                inverse.mapPoints(touchPoint);
+//                int x = Integer.valueOf((int)touchPoint[0]);
+//                int y = Integer.valueOf((int)touchPoint[1]);
+
+
+
+                        int tempResId = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
+                        String imageName = getResources().getResourceName(tempResId);
+                        ImageView tempView = new ImageView(getApplicationContext());
+                        tempView.setImageResource(tempResId);
+
+
+                        BitmapDrawable drawable = (BitmapDrawable)tempView.getDrawable();
+
+
+//                    tempView.setDrawingCacheEnabled(true);
+//                    Drawable drawable = ((ImageView)view).getDrawable();
+
+
+                        Bitmap bitmap = drawable.getBitmap();
+
+//                    BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+//                    Bitmap bitmap = drawable.getBitmap();
+
+                        int transparency = -1;
+                        int bitmapheight = bitmap.getHeight();
+
+                        if(y < bitmapheight) {
+
+                            //Bitmap tempBitmap = ((BitmapDrawable)tempView.getBackground()).getBitmap();
+                            transparency = ((bitmap.getPixel((int) x, (int) y) & 0xff000000) >> 24);
+                        }
+                        else
+                        {
+                            String s = "error";
+
+                        }
+
+
+                        if(transparency > -1)
+                            return false;
+
+
+
+
 
     //
     //                    imageView.setDrawingCacheEnabled(true);
@@ -565,14 +607,14 @@ public class MainActivity extends AppCompatActivity {
 
                             _imgShadow2 = new ImageView(getApplicationContext());
                             _imgParamsShadow2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-                        }
+
 
 
                         break;
 
                     case MotionEvent.ACTION_MOVE:
 
-                        if (transparency < 0) {
+
 
                             //move image:
                             PointF movement = new PointF(motionEvent.getX() - _downPT.x, motionEvent.getY() - _downPT.y);
@@ -695,13 +737,13 @@ public class MainActivity extends AppCompatActivity {
                         _imgDwarf.setLayoutParams(layoutParams);
                         */
 
-                        }
+
 
                         break;
 
                     case MotionEvent.ACTION_UP:
 
-                        if (transparency < 0) {
+
 
                             _rootLayout.removeView(_imgShadow);
                             _rootLayout.removeView(_imgShadow2);
@@ -729,7 +771,7 @@ public class MainActivity extends AppCompatActivity {
 
                             view.startAnimation(moveImage);
 
-                        }
+
 
                         break;
 
