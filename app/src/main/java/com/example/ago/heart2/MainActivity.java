@@ -20,6 +20,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Display;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -81,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     PointF _pointA = new PointF(200, 400);
     PointF _pointB = new PointF(300, 400);
 
-    public PointF[] pointArray = {_pointA, _pointB};
+    //public PointF[] pointArray = {_pointA, _pointB};
+    ArrayList<Coordinate> pointArray;
 
 
     public class LineInfo
@@ -200,7 +202,8 @@ public class MainActivity extends AppCompatActivity {
         paint.setStrokeWidth(10);
 
         //Create grid
-        Grid grid = CreateGrid(100, 200, 1500, 900, 150);
+        //Grid grid = CreateGrid(100, 200, 1500, 900, 300);
+        Grid grid = CreateGrid(100, 200, 600, 600, 300);
 
 
         //Paint grid lines
@@ -216,7 +219,8 @@ public class MainActivity extends AppCompatActivity {
             canvas.drawPoint(co.X, co.Y, paint);
         }
 
-
+        Log.d("Test", "Midpoint size: " + grid.midPoints.size());
+        pointArray = grid.midPoints;
         //_img.setTranslationZ(1.1f);
 
 
@@ -241,19 +245,19 @@ public class MainActivity extends AppCompatActivity {
         //_grid.setRotationX(10.0f);
         //_img.setRotationX(10.0f);
 
-        ImageView _iwElf = MakeImage(R.drawable.elf_w_orig, new PointF(100f,100f));
-        _rootLayout.addView(_iwElf);
+//        ImageView _iwElf = MakeImage(R.drawable.elf_w_orig, new PointF(100f,100f));
+//        _rootLayout.addView(_iwElf);
 
 
-        ImageView _iwWarr = MakeImage(R.drawable.warr, new PointF(200f,200f));
-        _rootLayout.addView(_iwWarr);
+//        ImageView _iwWarr = MakeImage(R.drawable.warr, new PointF(200f,200f));
+//        _rootLayout.addView(_iwWarr);
 
 
         ImageView _iwMonk = MakeImage(R.drawable.head, new PointF(300f,400f));
         _rootLayout.addView(_iwMonk);
 
-        ImageView _iwMonk2 = MakeImage(R.drawable.head2, new PointF(300f,400f));
-        _rootLayout.addView(_iwMonk2);
+//        ImageView _iwMonk2 = MakeImage(R.drawable.head2, new PointF(300f,400f));
+//        _rootLayout.addView(_iwMonk2);
 
 
         //ImageView IW = MakeImage(int imageviewID, int imageID);
@@ -281,10 +285,10 @@ public class MainActivity extends AppCompatActivity {
         ImageZ[] oldImageZArray = new ImageZ[4];
 
         _img.setOnTouchListener(new MyTouchListener());
-        _iwElf.setOnTouchListener(new MyTouchListener());
-        _iwWarr.setOnTouchListener(new MyTouchListener());
+//        _iwElf.setOnTouchListener(new MyTouchListener());
+//        _iwWarr.setOnTouchListener(new MyTouchListener());
         _iwMonk.setOnTouchListener(new MyTouchListener());
-        _iwMonk2.setOnTouchListener(new MyTouchListener());
+//        _iwMonk2.setOnTouchListener(new MyTouchListener());
 
         //still-animation for dwarf-image:
 
@@ -386,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private PointF getClosestSnap(PointF p1, PointF[] points){
+    private PointF getClosestSnap(PointF p1, ArrayList<Coordinate> points){  //PointF[]
 
         Float currentPointX = p1.x;
         Float currentPointY = p1.y;
@@ -399,19 +403,20 @@ public class MainActivity extends AppCompatActivity {
         Double prevDistance = null;
 
 
-        for(int i = 0; i < points.length ; i++){
 
-            xFromPoints = points[i].x;
-            yFromPoints = points[i].y;
+        for(int i = 0; i < points.size(); i++){
+
+            xFromPoints = (float)points.get(i).X;
+            yFromPoints = (float)points.get(i).Y;
 
             distance = Math.sqrt((Math.pow(currentPointX.doubleValue() - xFromPoints.doubleValue(), 2)) + (Math.pow(currentPointY.doubleValue() - yFromPoints.doubleValue(), 2)));
 
             if(prevDistance == null){
-               closestPoint = points[i];
+               closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
             }
             else{
                 if(distance < prevDistance){
-                    closestPoint = points[i];
+                    closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
                 }
             }
 
@@ -486,10 +491,10 @@ public class MainActivity extends AppCompatActivity {
                         int x = (int) motionEvent.getX();
                         int y = (int) motionEvent.getY();
 
-                        int rawX = (int) motionEvent.getRawX();
-                        int rawY = (int) motionEvent.getRawY();
-
-                        int test = getStatusBarHeight();
+//                        int rawX = (int) motionEvent.getRawX();
+//                        int rawY = (int) motionEvent.getRawY();
+//
+//                        int test = getStatusBarHeight();
 //
 //                int xf = wholeX - imgCoords[0];
 //                int yf = wholeY - imgCoords[1] - test;
