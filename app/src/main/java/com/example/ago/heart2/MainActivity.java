@@ -424,7 +424,8 @@ public class MainActivity extends AppCompatActivity {
         //Coordinate closestPoint = null;
 
         Double distance = null;
-        Double prevDistance = null;
+        //---Double prevDistance = null;
+        Double smallestDistance = null; //new
 
 
 
@@ -435,16 +436,18 @@ public class MainActivity extends AppCompatActivity {
 
             distance = Math.sqrt((Math.pow(currentPointX.doubleValue() - xFromPoints.doubleValue(), 2)) + (Math.pow(currentPointY.doubleValue() - yFromPoints.doubleValue(), 2)));
 
-            if(prevDistance == null){
+            if((smallestDistance  == null){
                 closestPoint = points.get(i).Point;
+                smallestDistance = distance; //new
             }
             else{
                 if(distance < prevDistance){
                     closestPoint = points.get(i).Point;
+                    smallestDistance = distance; //new
                 }
             }
 
-            prevDistance = distance;
+            //---prevDistance = distance;
         }
         return closestPoint;
     }
