@@ -436,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
 
             distance = Math.sqrt((Math.pow(currentPointX.doubleValue() - xFromPoints.doubleValue(), 2)) + (Math.pow(currentPointY.doubleValue() - yFromPoints.doubleValue(), 2)));
 
-            if((smallestDistance  == null){
+            if(smallestDistance  == null){
                 closestPoint = points.get(i).Point;
                 smallestDistance = distance; //new
             }
