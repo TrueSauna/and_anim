@@ -228,7 +228,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Create grid
         //Grid grid = CreateGrid(100, 200, 1500, 900, 300);
-        Grid grid = CreateGrid(100, 200, 600, 600, 300);
+        //Grid grid = CreateGrid(100, 200, 600, 600, 300);
+        Grid grid = CreateGrid(100, 200, 822, 822, 274);
 
 
         //Paint grid lines
@@ -672,7 +673,12 @@ public class MainActivity extends AppCompatActivity {
                             updateLayoutZ();
 
                             //get most close (2 points atm) point for snap-functions (shadow for snaptarget & location of snap)
-                            _currentClosestPoint = getClosestSnap(_startPT, pointArray);
+                            //_currentClosestPoint = getClosestSnap(_startPT, pointArray);
+
+
+                            // _startPT.offset(view.getWidth()/2, view.getHeight()/2);
+                            PointF tempPoint = new PointF(_startPT.x+(view.getWidth()/2), _startPT.y+(view.getHeight()/2));
+                            _currentClosestPoint = getClosestSnap(tempPoint, pointArray);
 
                             //check if closest point already has an image in it
                             Boolean hasTaken = hasAlreadyTaken(_currentClosestPoint);
@@ -703,8 +709,8 @@ public class MainActivity extends AppCompatActivity {
                             //make snapshadow
                             _imgShadow2.setImageResource(resID);
                             _imgShadow2.setLayoutParams(_imgParamsShadow2);
-                            _imgShadow2.setX(_currentClosestPoint.x);
-                            _imgShadow2.setY(_currentClosestPoint.y);
+                            _imgShadow2.setX(_currentClosestPoint.x - (_imgShadow2.getWidth() / 2) -5);
+                            _imgShadow2.setY(_currentClosestPoint.y - (_imgShadow2.getHeight() / 2) -5);
 
                             //add shadow to layout if it's position has changed (delete previous shadow -> only one instance of shadow up)
                             if (_previousPoint != _currentClosestPoint) {
@@ -784,30 +790,39 @@ public class MainActivity extends AppCompatActivity {
                             _rootLayout.removeView(_imgShadow);
                             _rootLayout.removeView(_imgShadow2);
 
-                            //delete references to shadow and snap
-                            _previousPoint = null;
-                            _currentClosestPoint = null;
-
-                            TranslateAnimation moveImage = new TranslateAnimation(
-                                /*  startx,
-                                *   endx,
-                                *   starty,
-                                    endy
-                                    ALL are calculated FROM current point of image
-                                */
-                                    _origStart.x - _startPT.x,
-                                    0,
-                                    _origStart.y - _startPT.y,
-                                    0
-                            );
-
-                            //moveImage.setFillAfter(true);
-
-                            moveImage.setDuration(250);
-
-                            view.startAnimation(moveImage);
 
 
+//                            TranslateAnimation moveImage = new TranslateAnimation(
+//                                /*  startx,
+//                                *   endx,
+//                                *   starty,
+//                                    endy
+//                                    ALL are calculated FROM current point of image
+//                                */
+//                                    _origStart.x - _startPT.x,
+//                                    _currentClosestPoint.x - (view.getWidth() / 2), //0,
+//                                    _origStart.y - _startPT.y,
+//                                    _currentClosestPoint.y - (view.getHeight() / 2) //0
+//                            );
+//
+//
+//
+//
+//                            //delete references to shadow and snap
+//                            _previousPoint = null;
+//
+//
+//                            //moveImage.setFillAfter(true);
+//
+//                            moveImage.setDuration(250);
+//
+//                            view.startAnimation(moveImage);
+
+                        view.setX(_currentClosestPoint.x - (view.getWidth() / 2));
+                        view.setY(_currentClosestPoint.y - (view.getHeight() / 2));
+
+
+                        _currentClosestPoint = null;
 
                         break;
 
