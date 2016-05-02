@@ -105,14 +105,15 @@ public class MainActivity extends AppCompatActivity {
     public class Coordinate {
         int X;
         int Y;
-        PointF Point; // = new PointF((float)this.X, (float)this.Y);
+        //PointF Point;
+        PointF Point = new PointF((float)X, (float)Y);
 
         public Coordinate(int x, int y) {
             X = x;
             Y = y;
 
 
-            Point = new PointF(((x*72f)/ 265f), ((y*72f)/ 265f) ) ;
+            //Point = new PointF(((x*72f)/ 265f), ((y*72f)/ 265f) ) ;
 //            Pixels to Points:
 //            points = (pixels * 72) / ppi
 //
@@ -120,11 +121,11 @@ public class MainActivity extends AppCompatActivity {
 //            pixels = (points * ppi) / 72
         }
 
-        public Coordinate(PointF point) {
-            Point = point;
-            X =  (int)((point.x * 265f) / 72);
-            Y =  (int)((point.y * 265f) / 72);
-        }
+//        public Coordinate(PointF point) {
+//            Point = point;
+////            X =  (int)((point.x * 265f) / 72);
+////            Y =  (int)((point.y * 265f) / 72);
+//        }
 
     }
 
@@ -437,12 +438,14 @@ public class MainActivity extends AppCompatActivity {
             distance = Math.sqrt((Math.pow(currentPointX.doubleValue() - xFromPoints.doubleValue(), 2)) + (Math.pow(currentPointY.doubleValue() - yFromPoints.doubleValue(), 2)));
 
             if(smallestDistance  == null){
-                closestPoint = points.get(i).Point;
+                closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
+                //closestPoint = points.get(i).Point;
                 smallestDistance = distance; //new
             }
             else{
                 if(distance < smallestDistance){
-                    closestPoint = points.get(i).Point;
+                    closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
+                    //closestPoint = points.get(i).Point;
                     smallestDistance = distance; //new
                 }
             }
