@@ -441,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
                 smallestDistance = distance; //new
             }
             else{
-                if(distance < prevDistance){
+                if(distance < smallestDistance){
                     closestPoint = points.get(i).Point;
                     smallestDistance = distance; //new
                 }
