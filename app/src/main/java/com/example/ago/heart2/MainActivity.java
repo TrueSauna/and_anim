@@ -106,12 +106,13 @@ public class MainActivity extends AppCompatActivity {
         int X;
         int Y;
         //PointF Point;
-        PointF Point = new PointF((float)X, (float)Y);
+        PointF Point; // = new PointF((float)X, (float)Y);
 
         public Coordinate(int x, int y) {
             X = x;
             Y = y;
 
+            Point = new PointF((float)x, (float)y);
 
             //Point = new PointF(((x*72f)/ 265f), ((y*72f)/ 265f) ) ;
 //            Pixels to Points:
@@ -438,14 +439,14 @@ public class MainActivity extends AppCompatActivity {
             distance = Math.sqrt((Math.pow(currentPointX.doubleValue() - xFromPoints.doubleValue(), 2)) + (Math.pow(currentPointY.doubleValue() - yFromPoints.doubleValue(), 2)));
 
             if(smallestDistance  == null){
-                closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
-                //closestPoint = points.get(i).Point;
+                //closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
+                closestPoint = points.get(i).Point;
                 smallestDistance = distance; //new
             }
             else{
                 if(distance < smallestDistance){
-                    closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
-                    //closestPoint = points.get(i).Point;
+                    //closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
+                    closestPoint = points.get(i).Point;
                     smallestDistance = distance; //new
                 }
             }
