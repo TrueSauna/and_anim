@@ -20,6 +20,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DragEvent;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     //FUTURE NOTIFICATION: USE ARRAYLISTS, THEY'RE DYNAMIC, BASIC ARRAYS AREN'T
     public ImageZ currentImageZ = new ImageZ();
     public ImageZ[] oldImageZArray = new ImageZ[50];
-
+    public int PPI;
 
     /*
 
@@ -104,11 +105,27 @@ public class MainActivity extends AppCompatActivity {
     public class Coordinate {
         int X;
         int Y;
+        PointF Point; // = new PointF((float)this.X, (float)this.Y);
 
         public Coordinate(int x, int y) {
             X = x;
             Y = y;
+
+
+            Point = new PointF(((x*72f)/ 265f), ((y*72f)/ 265f) ) ;
+//            Pixels to Points:
+//            points = (pixels * 72) / ppi
+//
+//            Points to Pixels:
+//            pixels = (points * ppi) / 72
         }
+
+        public Coordinate(PointF point) {
+            Point = point;
+            X =  (int)((point.x * 265f) / 72);
+            Y =  (int)((point.y * 265f) / 72);
+        }
+
     }
 
     public class Grid
@@ -188,6 +205,12 @@ public class MainActivity extends AppCompatActivity {
 
         int statusHeight = getStatusBarHeight();
         int VisibleScreenHeight = height - statusHeight;
+
+//        DisplayMetrics metrics = getResources().getDisplayMetrics();
+//
+//        Point realSize = new Point();
+//        display.getRealSize(realSize);
+
 
 
 
@@ -398,6 +421,7 @@ public class MainActivity extends AppCompatActivity {
         Float xFromPoints = 0f;
         Float yFromPoints = 0f;
         PointF closestPoint = null;
+        //Coordinate closestPoint = null;
 
         Double distance = null;
         Double prevDistance = null;
@@ -412,11 +436,11 @@ public class MainActivity extends AppCompatActivity {
             distance = Math.sqrt((Math.pow(currentPointX.doubleValue() - xFromPoints.doubleValue(), 2)) + (Math.pow(currentPointY.doubleValue() - yFromPoints.doubleValue(), 2)));
 
             if(prevDistance == null){
-               closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
+                closestPoint = points.get(i).Point;
             }
             else{
                 if(distance < prevDistance){
-                    closestPoint = new PointF((float)points.get(i).X, (float)points.get(i).Y);
+                    closestPoint = points.get(i).Point;
                 }
             }
 
