@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
         //Create grid
         //Grid grid = CreateGrid(100, 200, 1500, 900, 300);
         //Grid grid = CreateGrid(100, 200, 600, 600, 300);
-        Grid grid = CreateGrid(100, 200, 822, 822, 274);
+        Grid grid = CreateGrid(100, 100, 822, 822, 274);
 
 
         //Paint grid lines
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
 //        _rootLayout.addView(_iwWarr);
 
 
-        ImageView _iwMonk = MakeImage(R.drawable.head, new PointF(300f,400f));
+        ImageView _iwMonk = MakeImage(R.drawable.head, new PointF(100f,100f));
         _iwMonk.setPadding(0,0,0,0);
         _rootLayout.addView(_iwMonk);
 
