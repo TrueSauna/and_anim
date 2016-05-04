@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        _grid.setMaxHeight(850);
 //        _grid.setMaxWidth(850);
-//        _grid.setScaleType(ImageView.ScaleType.MATRIX);
+      _grid.setScaleType(ImageView.ScaleType.MATRIX);
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
        // Matrix matric = new Matrix();
@@ -377,6 +377,48 @@ public class MainActivity extends AppCompatActivity {
         _tempImg.setImageResource(imageID);
         _tempImg.setTag(imageID);
 
+//        Drawable drawable = _tempImg.getDrawable();
+//        drawable.setFilterBitmap(false);
+//        _tempImg.setImageDrawable(drawable);
+
+
+//        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), imageID);
+//        BitmapDrawable draw = new BitmapDrawable(bitmap);
+//        draw.setAntiAlias(false);
+//        draw.setDither(false);
+//        _tempImg.setImageDrawable(draw);
+//        _tempImg.setScaleX(3f);
+//        _tempImg.setScaleY(3f);
+
+//                        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), imageID);
+//
+//
+//                        BitmapDrawable draw = new BitmapDrawable(bitmap);
+//                        draw.setAntiAlias(false);
+//                        draw.setDither(false);
+//
+//                        DisplayMetrics metrics = getResources().getDisplayMetrics();
+//                        draw.setTargetDensity(metrics);
+//
+//                        _tempImg.setImageDrawable(draw);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+
+        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), imageID, options);
+
+
+        BitmapDrawable draw = new BitmapDrawable(bitmap);
+        draw.setAntiAlias(false);
+        draw.setDither(false);
+        draw.setFilterBitmap(false);
+
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        draw.setTargetDensity(metrics);
+
+        _tempImg.setImageDrawable(draw);
+
+
 
         int childCount = _rootLayout.getChildCount();
         View v = _rootLayout.getChildAt(childCount-1);
@@ -401,8 +443,6 @@ public class MainActivity extends AppCompatActivity {
         _tempImg.setX(point.x);
         _tempImg.setY(point.y);
 
-
-        _tempImg.setPadding(0,0,0,0);
 
         return _tempImg;
     }
