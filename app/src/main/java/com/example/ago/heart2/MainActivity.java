@@ -228,9 +228,35 @@ public class MainActivity extends AppCompatActivity {
 
         //Draw grid
         _grid = (ImageView) this.findViewById(R.id._imgGrid);
+
+
+        RelativeLayout.LayoutParams _gridParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        _gridParams.height = 832;
+        _gridParams.width = 832;
+        _grid.setLayoutParams(_gridParams);
+
+//        _grid.setMaxHeight(850);
+//        _grid.setMaxWidth(850);
+//        _grid.setScaleType(ImageView.ScaleType.MATRIX);
         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
+       // Matrix matric = new Matrix();
+//        _grid.setScaleX(1.5f);
+//        _grid.setScaleY(1.5f);
+//        canvas.scale();
+
+
+        GradientDrawable gd = new GradientDrawable();
+        gd.setStroke(10,Color.BLUE);
+        _grid.setBackground(gd);
+
+
+
+
         _grid.setImageBitmap(bitmap);
+
+//        matrix = new Matrix();
+//        canvas.drawBitmap(bmp, matrix, paint);
 
         Paint paint = new Paint();
         paint.setColor(Color.GREEN);
@@ -857,8 +883,11 @@ public class MainActivity extends AppCompatActivity {
                         double x_center = (double)img_coordinates[0];
                         double y_center = (double)img_coordinates[1];
 
-                        view.setX(_currentClosestPoint.x);
-                        view.setY(_currentClosestPoint.y);
+                        view.setX(_currentClosestPoint.x - (view.getWidth() / 2));
+                        view.setY(_currentClosestPoint.y - (view.getHeight() / 2));
+
+//                        view.setX(_currentClosestPoint.x);
+//                        view.setY(_currentClosestPoint.y);
 
                         view.getLocationOnScreen(img_coordinates);
 
