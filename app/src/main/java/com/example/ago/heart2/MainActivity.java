@@ -37,6 +37,7 @@ import android.widget.LinearLayout;
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,6 +60,12 @@ public class MainActivity extends AppCompatActivity {
     public ImageZ currentImageZ = new ImageZ();
     public ImageZ[] oldImageZArray = new ImageZ[50];
     public int PPI;
+
+    public TextView txtSetX;
+    public TextView txtSetY;
+
+    public TextView txtMovingX;
+    public TextView txtMovingY;
 
     /*
 
@@ -213,8 +220,11 @@ public class MainActivity extends AppCompatActivity {
 //        Point realSize = new Point();
 //        display.getRealSize(realSize);
 
+        txtSetX = (TextView)findViewById(R.id.txtSetX);
+        txtSetY = (TextView)findViewById(R.id.txtSetY);
 
-
+        txtMovingX = (TextView)findViewById(R.id.txtMoveX);
+        txtMovingY = (TextView)findViewById(R.id.txtMoveY);
 
         //Draw grid
         _grid = (ImageView) this.findViewById(R.id._imgGrid);
@@ -257,13 +267,13 @@ public class MainActivity extends AppCompatActivity {
         _rootLayout = (RelativeLayout)findViewById(R.id._root);
 
         //movable image
-        _img = (ImageView) findViewById(R.id._imgDwarf);
-        _img.setTag(R.drawable.dwarf_1);
+        //_img = (ImageView) findViewById(R.id._imgDwarf);
+        //_img.setTag(R.drawable.dwarf_1);
         //works fine:
         //_imgDwarf.bringToFront();
         //however this might be more elegant solution overall
         //z-priority (order of image if moved on top of each other, lower -> higher):
-        _img.setTranslationZ(1.1f);
+        //_img.setTranslationZ(1.1f);
         _grid.setTranslationZ(0.0f);
 
 
@@ -280,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         ImageView _iwMonk = MakeImage(R.drawable.head, new PointF(300f,400f));
+        _iwMonk.setPadding(0,0,0,0);
         _rootLayout.addView(_iwMonk);
 
 //        ImageView _iwMonk2 = MakeImage(R.drawable.head2, new PointF(300f,400f));
@@ -310,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
 
         ImageZ[] oldImageZArray = new ImageZ[4];
 
-        _img.setOnTouchListener(new MyTouchListener());
+//        _img.setOnTouchListener(new MyTouchListener());
 //        _iwElf.setOnTouchListener(new MyTouchListener());
 //        _iwWarr.setOnTouchListener(new MyTouchListener());
         _iwMonk.setOnTouchListener(new MyTouchListener());
@@ -318,9 +329,9 @@ public class MainActivity extends AppCompatActivity {
 
         //still-animation for dwarf-image:
 
-        _adimgDwarf = ( AnimationDrawable)_img.getBackground();
-        _adimgDwarf.setOneShot(false);
-        _adimgDwarf.start();
+//        _adimgDwarf = ( AnimationDrawable)_img.getBackground();
+//        _adimgDwarf.setOneShot(false);
+//        _adimgDwarf.start();
 
 
     }
@@ -363,6 +374,9 @@ public class MainActivity extends AppCompatActivity {
 
         _tempImg.setX(point.x);
         _tempImg.setY(point.y);
+
+
+        _tempImg.setPadding(0,0,0,0);
 
         return _tempImg;
     }
@@ -660,66 +674,69 @@ public class MainActivity extends AppCompatActivity {
                             _startPT = new PointF(view.getX(), view.getY());
 
 
-                            //CHANGE THE Z-INDEX OF THE IMAGES -->>
-                            //comparison from previous - current to determine changes in order
-
-                            currentImageZ.setyCoord(view.getY());
-                            //saves coordinate changes to ImageZ-array:
-                            saveCurrentImageToZ(currentImageZ);
-                            //sort array by changed y to determine if order has changed:
-                            Arrays.sort(ImagesWithZ);
-
-                            //this changes every image's z that are in layout (in same order than ordered ImagesWithZ-array) by iterated counter
-                            updateLayoutZ();
-
-                            //get most close (2 points atm) point for snap-functions (shadow for snaptarget & location of snap)
-                            //_currentClosestPoint = getClosestSnap(_startPT, pointArray);
-
-
-                            // _startPT.offset(view.getWidth()/2, view.getHeight()/2);
+//                            //CHANGE THE Z-INDEX OF THE IMAGES -->>
+//                            //comparison from previous - current to determine changes in order
+//
+//                            currentImageZ.setyCoord(view.getY());
+//                            //saves coordinate changes to ImageZ-array:
+//                            saveCurrentImageToZ(currentImageZ);
+//                            //sort array by changed y to determine if order has changed:
+//                            Arrays.sort(ImagesWithZ);
+//
+//                            //this changes every image's z that are in layout (in same order than ordered ImagesWithZ-array) by iterated counter
+//                            updateLayoutZ();
+//
+//                            //get most close (2 points atm) point for snap-functions (shadow for snaptarget & location of snap)
+//                            //_currentClosestPoint = getClosestSnap(_startPT, pointArray);
+//
+//
+//                            // _startPT.offset(view.getWidth()/2, view.getHeight()/2);
                             PointF tempPoint = new PointF(_startPT.x+(view.getWidth()/2), _startPT.y+(view.getHeight()/2));
-                            _currentClosestPoint = getClosestSnap(tempPoint, pointArray);
+                           _currentClosestPoint = getClosestSnap(tempPoint, pointArray);
 
-                            //check if closest point already has an image in it
-                            Boolean hasTaken = hasAlreadyTaken(_currentClosestPoint);
-
-                            int resID = 0;
-
-                            //Show STOP:
-                            //if target spot has already an image OR imageshadow (hasTaken = true):
-                            if (hasTaken) {
-                                resID = getResources().getIdentifier("stop", "drawable", getPackageName());
-                                _imgShadow2.setTranslationZ(100f);
-                                _imgShadow2.setAlpha((float) 1);
-                            }
-                            //if image is dragged exactly to the target spot:
-                            else if (_currentClosestPoint.x == view.getX() && _currentClosestPoint.y == view.getY()) {
-                                resID = getResources().getIdentifier("stop", "drawable", getPackageName());
-                                _imgShadow2.setTranslationZ(100f);
-                                _imgShadow2.setAlpha((float) 1);
-                            }
-                            //Show shadow:
-                            //if theres no image OR imageshadow in snapspot
-                            else {
-                                resID = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
-                                _imgShadow2.setAlpha((float) 0.2);
-                                _imgShadow2.setTranslationZ(0.01f);
-                            }
-
-                            //make snapshadow
-                            _imgShadow2.setImageResource(resID);
-                            _imgShadow2.setLayoutParams(_imgParamsShadow2);
-                            _imgShadow2.setX(_currentClosestPoint.x - (_imgShadow2.getWidth() / 2) -5);
-                            _imgShadow2.setY(_currentClosestPoint.y - (_imgShadow2.getHeight() / 2) -5);
-
-                            //add shadow to layout if it's position has changed (delete previous shadow -> only one instance of shadow up)
-                            if (_previousPoint != _currentClosestPoint) {
-                                _rootLayout.removeView(_imgShadow2);
-                                _rootLayout.addView(_imgShadow2);
-                            }
-
-                            //updating previouspoint
-                            _previousPoint = _currentClosestPoint;
+                            txtMovingX.setText(Float.toString(view.getX()));
+                            txtMovingY.setText(Float.toString(view.getY()));
+//
+//                            //check if closest point already has an image in it
+//                            Boolean hasTaken = hasAlreadyTaken(_currentClosestPoint);
+//
+//                            int resID = 0;
+//
+//                            //Show STOP:
+//                            //if target spot has already an image OR imageshadow (hasTaken = true):
+//                            if (hasTaken) {
+//                                resID = getResources().getIdentifier("stop", "drawable", getPackageName());
+//                                _imgShadow2.setTranslationZ(100f);
+//                                _imgShadow2.setAlpha((float) 1);
+//                            }
+//                            //if image is dragged exactly to the target spot:
+//                            else if (_currentClosestPoint.x == view.getX() && _currentClosestPoint.y == view.getY()) {
+//                                resID = getResources().getIdentifier("stop", "drawable", getPackageName());
+//                                _imgShadow2.setTranslationZ(100f);
+//                                _imgShadow2.setAlpha((float) 1);
+//                            }
+//                            //Show shadow:
+//                            //if theres no image OR imageshadow in snapspot
+//                            else {
+//                                resID = getResources().getIdentifier(view.getTag().toString(), "drawable", getPackageName());
+//                                _imgShadow2.setAlpha((float) 0.2);
+//                                _imgShadow2.setTranslationZ(0.01f);
+//                            }
+//
+//                            //make snapshadow
+//                            _imgShadow2.setImageResource(resID);
+//                            _imgShadow2.setLayoutParams(_imgParamsShadow2);
+//                            _imgShadow2.setX(_currentClosestPoint.x - (_imgShadow2.getWidth() / 2) -5);
+//                            _imgShadow2.setY(_currentClosestPoint.y - (_imgShadow2.getHeight() / 2) -5);
+//
+//                            //add shadow to layout if it's position has changed (delete previous shadow -> only one instance of shadow up)
+//                            if (_previousPoint != _currentClosestPoint) {
+//                                _rootLayout.removeView(_imgShadow2);
+//                                _rootLayout.addView(_imgShadow2);
+//                            }
+//
+//                            //updating previouspoint
+//                            _previousPoint = _currentClosestPoint;
 
 
 
@@ -818,9 +835,38 @@ public class MainActivity extends AppCompatActivity {
 //
 //                            view.startAnimation(moveImage);
 
-                        view.setX(_currentClosestPoint.x - (view.getWidth() / 2));
-                        view.setY(_currentClosestPoint.y - (view.getHeight() / 2));
+                        //view.setX(100);
+                        //view.setY(600);
 
+                        //view.setX(248-150);
+                        //view.setY(325-150);
+
+                        //view.setX(248-150);
+                        //view.setY(325+260-150);
+
+                        //view.setX(248-150);
+                        //view.setY(325+260+263-150);
+
+                        float f1 = view.getX();
+                        float f2 = view.getY();
+
+                        int[] img_coordinates = new int[2];
+
+                        view.getLocationOnScreen(img_coordinates);
+
+                        double x_center = (double)img_coordinates[0];
+                        double y_center = (double)img_coordinates[1];
+
+                        view.setX(_currentClosestPoint.x);
+                        view.setY(_currentClosestPoint.y);
+
+                        view.getLocationOnScreen(img_coordinates);
+
+                        //view.setX((float)img_coordinates[0]);
+                        //view.setY((float)img_coordinates[1]-72);
+
+                        txtSetX.setText(Float.toString(view.getX()));
+                        txtSetY.setText(Float.toString(view.getY()));
 
                         _currentClosestPoint = null;
 
